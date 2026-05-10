@@ -9,7 +9,7 @@ message: >-
 type: software
 authors:
   - given-names: Jorge
-    family-names: Lazaro Mesa
+    family-names: Lazaro
     email: jorlazar@ucm.es
     affiliation: Universidad Complutense de Madrid
 repository-code: 'https://github.com/jorlazar/BiasTest'
