@@ -1,0 +1,21 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: BiasTest
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Jorge
+    family-names: Lazaro Mesa
+    email: jorlazar@ucm.es
+    affiliation: Universidad Complutense de Madrid
+repository-code: 'https://github.com/jorlazar/BiasTest'
+abstract: >-
+  Una herramienta básica de detección de sesgos en LLMs
+  desarrollada como TFG, con integración de HuggingFace
+keywords:
+  - 'LLM, modelo, prompt, inferencia, generación'
+license: Apache-2.0
