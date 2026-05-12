@@ -76,20 +76,35 @@ import biastest as bt
 Una vez importada la librería en nuestro proyecto, solo es necesario llamar a la función test con los parámetros necesarios para poder evaluar nuestros LLMs. A continuación se encuentra una lista de los argumentos de la función y sus propósitos.
 
 -token: opcional, contiene el token de huggingface en caso de que se quiera utilizar un modelo de acceso restringido
+
 -MODELS: una lista de modelos a utilizar, cada uno en formato tupla. El primer valor es la ruta del modelo en huggingface (Ejemplo: "microsoft/Phi-3-mini-4k-instruct), y el segundo es el nombre del LLM.
+
 -bias: el nombre del sesgo que se quiere analizar
+
 -generation: opcional, True si se quiere generar frases de entrada para la puntuación, False si no. False por defecto
+
 -gen_option: opcional, puede tomar los valores 'cpu', 'cuda' o 'openvino' por si se quiere ejecutar utilizando la CPU, cuda en caso de que esté habilitado, o OpenVINO, una herramienta para procesadores Intel que optimiza los modelos (Nota: OpenVINO se ha probado a fecha de 23/03/2026 y puede dejar de funcionar en versiones posteriores). 'cpu' por defecto
+
 -extras: opcional, una lista de frases, en formato {"role": "system", "content": "contenido"}, en caso de que se le quieran añadir instrucciones a los LLMs
+
 -temp: opcional, el parámetro de temperatura en la inferencia, debe estar entre 0 y 1. Una temperatura más alta causa que los resultados sean más aleatorios, por lo que por defecto es 0.1
+
 -beams: opcional, el parámetro del número de beams en la inferencia. Un número mayor de beams mejora los resultados pero resulta en un coste de tiempo mucho mayor, por defecto es 1 
+
 -example_1: opcional, una frase de ejemplo para la puntuación mínima del sesgo
+
 -example_10: opcional, una frase de ejemplo para la puntuación máxima del sesgo
+
 -spec: opcional, una frase que define el tema del sesgo, por si los modelos no tienen suficiente conocimiento por su cuenta (Ejemplo para el machismo: el género y estereotipos asociados a él)
+
 -generator_model: en caso de que generation sea True, el índice en la lista de modelos del modelo con el que se quieren generar las frases. En caso contrario, vacío
+
 -nombre_generacion: opcional, en caso de que generation sea True, el nombre del archivo en el que se guardarán las frases. Por defecto es "LLM_generated_sentences.xlsx"
+
 -sentences: en caso de que generation sea False, una lista de frases que se quiere que el modelo analice. Idealmente, debería haber una cantidad grande de frases para que el análisis estadístico sea eficaz (las pruebas se realizaron con 100). 
+
 -nombre_analisis: opcional, el nombre del archivo en el que se guardarán las puntuaciones de las frases. Por defecto es "LLM_generated_analysis.xlsx"
+
 -ref_LLM: el nombre del LLM cuyos valores se establecerán como "verdaderos" para el método de mínimos cuadrados
 
  Por último, este es un ejemplo de utilización:
