@@ -28,6 +28,12 @@ satisfactorios, y todo el sistema de análisis ha sido recopilado para crear Bia
 concisa que permite su fácil utilización y la reproducción de resultados con otros
 modelos.
 
+El sistema toma una lista de LLMs y un sesgo de entrada y realiza una serie de pruebas en las que los modelos
+deben puntuar frases del 1 al 10 en función del nivel del sesgo que presenten, y después pasa los resultados
+por el método de mínimos cuadrados para hallar el nivel de sesgo de cada modelo relativo a uno de ellos, cuyo 
+resultado se fija como "verdadero". Los resultados se muestran como valores para las variables a y b en la 
+fórmula a + bx = r, donde x es la puntuación del modelo y r es la puntuación del modelo "verdadero".
+
 ## Limitaciones
 
 Dado el tamaño del trabajo, la investigación ha sido limitada, lo que genera ciertas limitaciones que se deben tener en cuenta al usar esta herramienta.
@@ -36,7 +42,7 @@ Dado el tamaño del trabajo, la investigación ha sido limitada, lo que genera c
 
 -Muchos LLMs pequeños pueden no entender lo que es el sesgo y dar resultados al azar, ver sus resultados condicionados por prompts anteriores o ser propensos a dar los mismos valores
 
--La forma de medición del sesgo es simple y puede dar lugar a malentendidos. Los sesgos son temas sensibles y que presentan muchas facetas y matices, por lo que la medición del 1 al 10 simplifica mucho la medición del sesgo de una frase determinada. Esta herramienta no pretende ser una forma empírica de entender los sesgos que presenta un LLM, sino un indicador general del nivel de sesgo y de percepción de él que puede presentar. (Mencionar frases de ejemplo 1 y 10)
+-La forma de medición del sesgo es simple y puede dar lugar a malentendidos. Los sesgos son temas sensibles y que presentan muchas facetas y matices, por lo que la medición del 1 al 10 simplifica mucho la medición del sesgo de una frase determinada. Esta herramienta no pretende ser una forma empírica de entender los sesgos que presenta un LLM, sino un indicador general del nivel de sesgo y de percepción de él que puede presentar.
 
 -Actualmente solo se pueden utilizar LLMs que se encuentren en huggingface
 
@@ -62,29 +68,34 @@ Como producto de un trabajo de fin de grado, esta herramienta presenta muchas po
 
 ## Funcionamiento y modo de uso
 
-Para empezar a utilizar la herramienta de forma local, el primer paso es instalar la herramienta en la máquina local con el siguiente comando:
-
-```Bash
-pip install Nombre
-```
-
-Y posteriormente importar la librería a nuestro archivo de python: 
+Para empezar a utilizar la herramienta de forma local, el primer paso es descargar el contenido de la carpeta "biastest" en la ruta del proyecto donde se quiera utilizar, y posteriormente importar la librería al archivo de python: 
 ```Python
-import Nombre
+import biastest as bt
 ```
 
 Una vez importada la librería en nuestro proyecto, solo es necesario llamar a la función test con los parámetros necesarios para poder evaluar nuestros LLMs. A continuación se encuentra una lista de los argumentos de la función y sus propósitos.
 
--Modelos -- obligatorio
--Nombres de los archivos -- por defecto los que les he puesto yo
--Opción de frases a evaluar: generar (disclaimer de falta de testing/fiabilidad), con librería predefinida por la herramienta, 
- a mano sin score, a mano con score -- por defecto las predefinidas
--Usar OpenVINO (disclaimer de uso de intel y de GPU), cuda (disclaimer no probado), o nada -- por defecto nada
--Opción para meter mensajes extra al LLM (la prompt siempre será la misma pero se pueden meter mensajes de estos en plan 
- user : noseque, y otros como el de modo no thinking de SmolLM) -- por defecto nada
--Opción de token de huggingface -- por defecto nada
--Opción de tweakear los parámetros de los LLMs como la temperatura -- por defecto los de high
--Opción de salida bayesiana con disclaimer de que tarda mucho o da error si no tienes el c++ correcto o la version de 
- python -- por defecto sin ella
+-token: opcional, contiene el token de huggingface en caso de que se quiera utilizar un modelo de acceso restringido
+-MODELS: una lista de modelos a utilizar, cada uno en formato tupla. El primer valor es la ruta del modelo en huggingface (Ejemplo: "microsoft/Phi-3-mini-4k-instruct), y el segundo es el nombre del LLM.
+-bias: el nombre del sesgo que se quiere analizar
+-generation: opcional, True si se quiere generar frases de entrada para la puntuación, False si no. False por defecto
+-gen_option: opcional, puede tomar los valores 'cpu', 'cuda' o 'openvino' por si se quiere ejecutar utilizando la CPU, cuda en caso de que esté habilitado, o OpenVINO, una herramienta para procesadores Intel que optimiza los modelos (Nota: OpenVINO se ha probado a fecha de 23/03/2026 y puede dejar de funcionar en versiones posteriores). 'cpu' por defecto
+-extras: opcional, una lista de frases, en formato {"role": "system", "content": "contenido"}, en caso de que se le quieran añadir instrucciones a los LLMs
+-temp: opcional, el parámetro de temperatura en la inferencia, debe estar entre 0 y 1. Una temperatura más alta causa que los resultados sean más aleatorios, por lo que por defecto es 0.1
+-beams: opcional, el parámetro del número de beams en la inferencia. Un número mayor de beams mejora los resultados pero resulta en un coste de tiempo mucho mayor, por defecto es 1 
+-example_1: opcional, una frase de ejemplo para la puntuación mínima del sesgo
+-example_10: opcional, una frase de ejemplo para la puntuación máxima del sesgo
+-spec: opcional, una frase que define el tema del sesgo, por si los modelos no tienen suficiente conocimiento por su cuenta (Ejemplo para el machismo: el género y estereotipos asociados a él)
+-generator_model: en caso de que generation sea True, el índice en la lista de modelos del modelo con el que se quieren generar las frases. En caso contrario, vacío
+-nombre_generacion: opcional, en caso de que generation sea True, el nombre del archivo en el que se guardarán las frases. Por defecto es "LLM_generated_sentences.xlsx"
+-sentences: en caso de que generation sea False, una lista de frases que se quiere que el modelo analice. Idealmente, debería haber una cantidad grande de frases para que el análisis estadístico sea eficaz (las pruebas se realizaron con 100). 
+-nombre_analisis: opcional, el nombre del archivo en el que se guardarán las puntuaciones de las frases. Por defecto es "LLM_generated_analysis.xlsx"
+-ref_LLM: el nombre del LLM cuyos valores se establecerán como "verdaderos" para el método de mínimos cuadrados
+
+ Por último, este es un ejemplo de utilización:
+
+ ```Python
+bt.test(token='none', MODELS=[("microsoft/Phi-3-mini-4k-instruct", "Phi-3-mini-4k-instruct"),("Qwen/Qwen2.5-1.5B-Instruct", "Qwen2.5-1.5B-Instruct")], bias='sexism', generation=False, gen_option='cpu', extras=["role": "system", "content": "You are an expert in sexism"], temp=0.5, beams = 1, example_1='Men and women are equal', example_10='none', spec= 'gender, and capabilities or stereotypes linked to it', generator_model= 0, nombre_generacion= 'generacion.xlsx', sentences= ['Women are equal to men', 'Women are inferior to men'], nombre_analisis= 'analisis.xlsx', ref_LLM= 'Phi-3-mini-4k-instruct')
+```
 
 ## Documento del tfg
