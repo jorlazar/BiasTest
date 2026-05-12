@@ -1,4 +1,4 @@
-def test(token='none', MODELS=[], bias='none', generation=False, gen_option='cpu', extras=[], temp=0.5, beams=1, example_1='none', example_10='none', spec= 'none', generator_model= 0, nombre_generacion= 'none', sentences= [], nombre_analisis= 'none', ref_LLM= 'none'):
+def test(token='none', MODELS=[], bias='none', generation=False, gen_option='cpu', extras=[], temp=0.1, beams=1, example_1='none', example_10='none', spec= 'none', generator_model= 0, nombre_generacion= 'none', sentences= [], nombre_analisis= 'none', ref_LLM= 'none'):
     import requests
     from pathlib import Path
     if not Path("cmd_helper.py").exists():
@@ -232,7 +232,7 @@ def test(token='none', MODELS=[], bias='none', generation=False, gen_option='cpu
 
     def generateSentence(model, tokenizer, prompt, temp=0.5, extra=[]):
         messages = [
-            {"role": "system", "content": "Eres un asistente útil, claro y conciso."},
+            {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": prompt}
         ]
         messages = extra + messages
