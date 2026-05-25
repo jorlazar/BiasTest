@@ -2,10 +2,7 @@
 Este repositorio contiene el código y la documentación de BiasTest, una herramienta de análisis de sesgos en LLMs producto de mi Trabajo de Fin de Grado del Grado de Ingeniería Informática en la Universidad Complutense de Madrid.
 
 ## Introducción
--Nombre de herramienta y estructura (librería de python, huggingface)
--Objetivo y motivación
--Qué se puede hacer exactamente
--Cómo te da los resultados
+
 
 A lo largo de los últimos años, la Inteligencia Artifical generativa ha pasado de
 ser una tecnología emergente a convertirse en parte de la rutina de millones de
@@ -28,7 +25,7 @@ satisfactorios, y todo el sistema de análisis ha sido recopilado para crear Bia
 concisa que permite su fácil utilización y la reproducción de resultados con otros
 modelos.
 
-El sistema toma una lista de LLMs y un sesgo de entrada y realiza una serie de pruebas en las que los modelos
+El sistema BiasTest toma una lista de LLMs y un sesgo de entrada y realiza una serie de pruebas en las que los modelos
 deben puntuar frases del 1 al 10 en función del nivel del sesgo que presenten, y después pasa los resultados
 por el método de mínimos cuadrados para hallar el nivel de sesgo de cada modelo relativo a uno de ellos, cuyo 
 resultado se fija como "verdadero". Los resultados se muestran como valores para las variables a y b en la 
@@ -114,3 +111,6 @@ bt.test(token='none', MODELS=[("microsoft/Phi-3-mini-4k-instruct", "Phi-3-mini-4
 ```
 
 ## Documento del tfg
+
+[Memoria TFG Detección de sesgos en LLMs Jorge Lázaro Mesa.pdf](https://github.com/user-attachments/files/28230117/Memoria.TFG.Deteccion.de.sesgos.en.LLMs.Jorge.Lazaro.Mesa.pdf)
+
